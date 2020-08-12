@@ -1,0 +1,30 @@
+name: Environment Variables Playground
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+  job_one:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Set Environment Variable using workflow command
+        run: echo "::set-env name=MY_ENV_VAR::hello world!"
+        
+      - name: Show Environment Variable set from previous Step
+        run: echo $MY_ENV_VAR
+        
+      - name: Overwrite Environment Variable using Script
+        uses: actions/github-script@v2
+        with:
+          script: |
+            const varName = 'MY_ENV_VAR';
+            
+            // Display the current value of the environment variable
+            console.log(`Existing environment variable value: ${process.env[varName]}`);
+            
+            // Set the environment varaible to another value
+            core.exportVariable(varName, Date.now());
+            
+      - name: Show Environment Variable set from previous Step
+        run: echo $MY_ENV_VAR
