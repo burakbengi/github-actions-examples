@@ -60,7 +60,7 @@ jobs:
     needs: job_one
     
     steps:
-      - name: Show Workflow environment variable
+      - name: Show Workflow environment variable (unchanged from previous job)
         run: echo "Workflow level environment variable = $WF_LEVEL_ENV_VAR"
         
       - name: Show Environment varaible value set in previous job
