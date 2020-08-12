@@ -27,4 +27,4 @@ jobs:
         run: |
           echo "NAME=$NAME"
           echo "OWNER=$OWNER"
-          ehco "COMPOSED=$COMPOSED"
+          echo "COMPOSED=$COMPOSED"
