@@ -25,11 +25,9 @@ jobs:
           env_to_load: ${{ github.event.inputs.env }}
         with:
           script: |
-            const envToLoad = process.env.env_to_load;
+            const envToLoad = process.env.env_to_load;            
+            const values = JSON.parse(`${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`);
             
-            console.log(JSON.stringify(process.env, null, 2));
-            
-            const values = JSON.parse(`${process.env.WORKSPACE}/${envToLoad}.json`);
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
               core.exportVariable(`env_var_$key`, values[key]);
