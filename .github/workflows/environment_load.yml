@@ -33,7 +33,7 @@ jobs:
             Object.keys(values).forEach(key => {
               console.log(key);
               console.log(values[key]);
-              core.exportVariable(`env_var_${key}`, values[key]);
+              //core.exportVariable(`env_var_${key}`, values[key]);
             });
             
       - name: Use Environment Variables
