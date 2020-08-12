@@ -1,0 +1,5 @@
+{
+  "name": "qa",
+  "environment": "pre-production",
+  "version": "1.0.0"
+}
