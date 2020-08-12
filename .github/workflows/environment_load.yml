@@ -26,7 +26,7 @@ jobs:
         with:
           script: |
             const envToLoad = process.env.env_to_load;            
-            const values = JSON.parse(`${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`);
+            const values = require `${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`;
             
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
