@@ -26,9 +26,10 @@ jobs:
         with:
           script: |
             const envToLoad = process.env.env_to_load;
-            console.log(JSON.stringify(process.env, null, 2))
             
-            const values = JSON.parse(`${process.env.}/${envToLoad}.json`);
+            console.log(JSON.stringify(process.env, null, 2));
+            
+            const values = JSON.parse(`${process.env.WORKSPACE}/${envToLoad}.json`);
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
               core.exportVariable(`env_var_$key`, values[key]);
