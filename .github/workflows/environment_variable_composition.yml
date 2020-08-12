@@ -19,6 +19,7 @@ jobs:
           COMPOSED_VALUE: ${{ env.WF_ENV_NAME }}-actions
         run: echo "COMPOSED_VALUE=$COMPOSED_VALUE"
         
+      # Composition will not work here as the environment variables used in the composition are defined at the same time
       - name: Failure to reference env var
         env:
           NAME: test
@@ -28,3 +29,11 @@ jobs:
           echo "NAME=$NAME"
           echo "OWNER=$OWNER"
           echo "COMPOSED=$COMPOSED"
+
+      - name: Set a new environment variable
+        run: echo "::set-env name=NEW_VAR::actions-examples"
+        
+      - name: Composition using previously set environment variables
+        env:
+          CUSTOM_ENV_VAR: ${{ env.WF_ENV_NAME }}-${{ env.NEW_VAR }}
+        run: echo "CUSTOM_ENV_VAR=$CUSTOM_ENV_VAR"
