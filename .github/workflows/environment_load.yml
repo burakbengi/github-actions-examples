@@ -38,7 +38,7 @@ jobs:
         uses: actions/github-script@v2
         with:
           script: |
-            console.log(JSON.stringify(process.env, null, 2);
+            console.log(JSON.stringify(process.env, null, 2));
             
       - name: Use Environment Variables
         run: |
