@@ -31,14 +31,14 @@ jobs:
             
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
-              core.exportVariable(`env_var_${key}`, values[key]);
+              core.exportVariable(`env_var_${key}`.toUpperCase(), values[key]);
             });
             
-      - name: Expose all environment variables
-        uses: actions/github-script@v2
-        with:
-          script: |
-            console.log(JSON.stringify(process.env, null, 2));
+#       - name: Expose all environment variables
+#         uses: actions/github-script@v2
+#         with:
+#           script: |
+#             console.log(JSON.stringify(process.env, null, 2));
             
       - name: Use Environment Variables
         run: |
