@@ -1,0 +1,30 @@
+name: Environment Variable Composition
+
+on:
+  workflow_dispatch:
+
+env:
+  WF_ENV_NAME: github
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Show WF_ENV_NAME
+        run: echo "WF_ENV_NAME=$WF_ENV_NAME"
+        
+      - name: Compose an env value for step
+        env:
+          COMPOSED_VALUE: ${{ env.WF_ENV_NAME }}-actions
+        run: echo "COMPOSED_VALUE=$COMPOSED_VALUE"
+        
+      - name: Failure to reference env var
+        env:
+          NAME: test
+          OWNER: octodemo
+          COMPOSED: ${{ env.OWNER }}/${{ env.NAME }}
+        run: |
+          echo "NAME=$NAME"
+          echo "OWNER=$OWNER"
+          ehco "COMPOSED=$COMPOSED"
