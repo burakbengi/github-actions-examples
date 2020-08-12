@@ -1,15 +1,39 @@
 name: Environment Variables Playground
 
+#
+# Workflow that showcases environment varaible setting/updating and limitations around environment varaiables across jobs.
+#
+# The use of job outputs allows for information to be passed from one job to another, but environment varaibles and modifications are scoped to the job.
+#
+
 on: 
   workflow_dispatch:
-  
+
+env:
+  WF_LEVEL_ENV_VAR: top level environment value 
+
 jobs:
   job_one:
     runs-on: ubuntu-latest
     
+    outputs:
+      my_env_var: ${{ steps.workflow_commands.outputs.my_env_var }}
+    
     steps:
+      - name: Show Workflow environment variable
+        run: echo "Workflow level environment variable = $WF_LEVEL_ENV_VAR"
+        
+      - name: Update Workflow environment variable
+        run: echo "::set-env name=WF_LEVEL_ENV_VAR::new value"
+        
+      - name: Show Workflow environment variable has changed
+        run: echo "Workflow level environment variable = $WF_LEVEL_ENV_VAR"
+        
       - name: Set Environment Variable using workflow command
-        run: echo "::set-env name=MY_ENV_VAR::hello world!"
+        id: workflow_commands
+        run: |
+          echo "::set-env name=MY_ENV_VAR::hello world!"
+          echo "::set-output name=my_env_var::hello world!"
         
       - name: Show Environment Variable set from previous Step
         run: echo $MY_ENV_VAR
@@ -29,11 +53,17 @@ jobs:
       - name: Show Environment Variable set from previous Step
         run: echo $MY_ENV_VAR
 
+
   job_two:
     runs-on: ubuntu-latest
     
     needs: job_one
     
     steps:
+      - name: Show Workflow environment variable
+        run: echo "Workflow level environment variable = $WF_LEVEL_ENV_VAR"
+        
       - name: Show Environment varaible value set in previous job
-        run: echo "MY_ENV_VAR value = $MY_ENV_VAR"
+        run: |
+          echo "MY_ENV_VAR value = $MY_ENV_VAR"
+          echo "Job Output value for my_env_var = ${{ needs.job_one.outputs.my_env_var }}"
