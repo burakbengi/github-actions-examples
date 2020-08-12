@@ -27,7 +27,7 @@ jobs:
           script: |
             const envToLoad = process.env.env_to_load;
             
-            const values = require(`${envToLoad}.json`);
+            const values = require(`__dirname/${envToLoad}.json`);
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
               core.exportVariable(`env_var_$key`, values[key]);
