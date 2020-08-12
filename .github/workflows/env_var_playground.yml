@@ -28,3 +28,12 @@ jobs:
             
       - name: Show Environment Variable set from previous Step
         run: echo $MY_ENV_VAR
+
+  job_two:
+    runs-on: ubuntu-latest
+    
+    needs: job_one
+    
+    steps:
+      - name: Show Environment varaible value set in previous job
+        run: echo "MY_ENV_VAR value = $MY_ENV_VAR"
