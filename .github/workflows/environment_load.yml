@@ -1,0 +1,41 @@
+name: Config Map into Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Environment
+        required: true
+        default: dev
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+       
+      #
+      # Load variables from config JSON files for environments
+      #
+      - name: Load environment vars from config file
+        uses: actions/github-script@v2
+        env:
+          env_to_load: ${{ github.event.inputs.env }}
+        with:
+          script: |
+            const envToLoad = process.env.env_to_load;
+            
+            const values = require(`${envToLoad}.json`);
+            // export the environment variables with names prefixed with 'env_var_' to avoid collisions
+            Object.keys(values).forEach(key => {
+              core.exportVariable(`env_var_$key`, values[key]);
+            });
+            
+      - name: Use Environment Variables
+        run: |
+          echo "Variables loaded from environment file ${{ github.event.inputs.env }}.json"
+          echo "NAME=$ENV_VAR_NAME"
+          echo "ENVIRONMENT=$ENV_VAR_ENVIRONMENT"
+          echo "VERSION=$ENV_VAR_VERSION"
