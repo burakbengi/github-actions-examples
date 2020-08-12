@@ -30,7 +30,7 @@ jobs:
             
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
             Object.keys(values).forEach(key => {
-              core.exportVariable(`env_var_$key`, values[key]);
+              core.exportVariable(`env_var_${key}`, values[key]);
             });
             
       - name: Use Environment Variables
