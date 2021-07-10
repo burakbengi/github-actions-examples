@@ -1,12 +1,10 @@
-name: Config Map into Environment
+name: Config Issue into Environment
 
 on:
-  workflow_dispatch:
-    inputs:
-      env:
-        description: Environment
-        required: true
-        default: dev
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
   
 jobs:
   test:
@@ -19,20 +17,26 @@ jobs:
       #
       # Load variables from config JSON files for environments
       #
-      - name: Load environment vars from config file
-        uses: actions/github-script@v2
+      - name: Load environment vars from issue body
+        uses: actions/github-script@v3
         env:
-          env_to_load: ${{ github.event.inputs.env }}
+          env_to_load: ${{ github.event.issue.body }}
         with:
           script: |
             const envToLoad = process.env.env_to_load;            
-            const values = require(`${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`);
-            console.log(JSON.stringify(values));
+            // const values = require(`${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`);
+            const lines = envToLoad.split('\r\n');
+            let newEnvVars = lines.forEach(line => {
+              let keyValue = line.split(':');
+              core.exportVariable(`TF_VAR_${keyValue[0]}`.toUpperCase(), keyValue[1]);
+            });
+            
+            //console.log(JSON.stringify(values));
             
             // export the environment variables with names prefixed with 'env_var_' to avoid collisions
-            Object.keys(values).forEach(key => {
-              core.exportVariable(`env_var_${key}`.toUpperCase(), values[key]);
-            });
+            //Object.keys(values).forEach(key => {
+              //core.exportVariable(`env_var_${key}`.toUpperCase(), values[key]);
+            //});
             
 #       - name: Expose all environment variables
 #         uses: actions/github-script@v2
@@ -42,7 +46,5 @@ jobs:
             
       - name: Use Environment Variables
         run: |
-          echo "Variables loaded from environment file ${{ github.event.inputs.env }}.json"
-          echo "NAME=$ENV_VAR_NAME"
-          echo "ENVIRONMENT=$ENV_VAR_ENVIRONMENT"
-          echo "VERSION=$ENV_VAR_VERSION"
+          echo "Variables loaded from issue body"
+
