@@ -23,26 +23,19 @@ jobs:
           env_to_load: ${{ github.event.issue.body }}
         with:
           script: |
-            const envToLoad = process.env.env_to_load;            
-            // const values = require(`${process.env.GITHUB_WORKSPACE}/${envToLoad}.json`);
+            const envToLoad = process.env.env_to_load;
             const lines = envToLoad.split('\r\n');
             let newEnvVars = lines.forEach(line => {
               let keyValue = line.split(':');
-              core.exportVariable(`TF_VAR_${keyValue[0]}`.toUpperCase(), keyValue[1]);
+              core.exportVariable(`TF_VAR_${keyValue[0].trim()}`.toUpperCase(), keyValue[1].trim());
             });
+
             
-            //console.log(JSON.stringify(values));
-            
-            // export the environment variables with names prefixed with 'env_var_' to avoid collisions
-            //Object.keys(values).forEach(key => {
-              //core.exportVariable(`env_var_${key}`.toUpperCase(), values[key]);
-            //});
-            
-#       - name: Expose all environment variables
-#         uses: actions/github-script@v2
-#         with:
-#           script: |
-#             console.log(JSON.stringify(process.env, null, 2));
+      - name: Expose all environment variables
+        uses: actions/github-script@v3
+        with:
+          script: |
+            console.log(JSON.stringify(process.env, null, 2));
             
       - name: Use Environment Variables
         run: |
